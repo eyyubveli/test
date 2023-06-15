@@ -13,11 +13,10 @@ admin.initializeApp({
     credential : admin.credential.cert(serviceAccount)
 });
 
-const firestore = admin.firestore();
 
 const bot = new Bot(process.env.BOT_TOKEN);
 
-let text;
+let text = "";
 
 bot.command('start',  (ctx) => {
     const name = ctx.from.first_name;
@@ -46,7 +45,8 @@ bot.on("message", async (ctx) => {
         reply_markup: keyboard,
     });
 
-    
+
+    const firestore = admin.firestore();    
     const userRef =  firestore.collection('users').doc();
     const timeStamp = admin.firestore.FieldValue.serverTimestamp();
 
