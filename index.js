@@ -8,6 +8,8 @@ require("dotenv").config();
 const admin = require("firebase-admin");
 const serviceAccount = require("./config.json")
 
+const firestore = admin.firestore();    
+
 
 admin.initializeApp({
     credential : admin.credential.cert(serviceAccount)
@@ -37,16 +39,7 @@ bot.on("message", async (ctx) => {
     const name = ctx.from.first_name;
    
     const checkUrl = await isTikTokURL(text);
-    
-    if(!checkUrl) return await ctx.reply(`Doğru bir url daxil et`);
-    
-    
-    await ctx.reply('Format seçin', {
-        reply_markup: keyboard,
-    });
 
-
-    const firestore = admin.firestore();    
     const userRef =  firestore.collection('users').doc();
     const timeStamp = admin.firestore.FieldValue.serverTimestamp();
 
@@ -58,8 +51,18 @@ bot.on("message", async (ctx) => {
         timestamp : timeStamp
         
     }
- 
+
     await userRef.set(userData);
+    
+    if(!checkUrl) return await ctx.reply(`Doğru bir url daxil et`);
+    
+    
+    await ctx.reply('Format seçin', {
+        reply_markup: keyboard,
+    });
+
+
+   
 
 
 });
