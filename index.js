@@ -4,11 +4,10 @@ const { URL } = require("url");
 const axios = require("axios");
 const keyboard = new InlineKeyboard().text('MP3', 'mp3').row().text('MP4', 'mp4');
 require("dotenv").config();
-let text;
 const admin = require("firebase-admin");
 
-
 const serviceAccount = require("./config.json")
+
 
 admin.initializeApp({
     credential : admin.credential.cert(serviceAccount)
@@ -18,6 +17,7 @@ const firestore = admin.firestore();
 
 const bot = new Bot(process.env.BOT_TOKEN);
 
+let text;
 
 bot.command('start',  (ctx) => {
     const name = ctx.from.first_name;
