@@ -39,7 +39,7 @@ bot.on("message", async (ctx) => {
    
     const checkUrl = await isTikTokURL(text);
     
-    if(!checkUrl) return ctx.reply(`Doğru bir url daxil et`);
+    if(!checkUrl) return await ctx.reply(`Doğru bir url daxil et`);
     
     
     await ctx.reply('Format seçin', {
