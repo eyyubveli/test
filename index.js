@@ -26,6 +26,20 @@ bot.command('start',  (ctx) => {
 });
 
 
+bot.catch((err) => {
+    const ctx = err.ctx;
+    ctx.reply("Bir xəta oldu. Daha sonra yenidən yoxlayın");
+    const e = err.error;
+    if (e instanceof GrammyError) {
+      console.error("Error in request:", e.description);
+    } else if (e instanceof HttpError) {
+      console.error("Could not contact Telegram:", e);
+    } else {
+      console.error("Unknown error:", e);
+    }
+  });
+
+
 async function isTikTokURL(url){
     const pattern = /^(?:https?:\/\/)?(?:www\.)?(?:vt\.)?tiktok\.com\/.*$|^(?:https?:\/\/)?(?:www\.)?vt\.tiktok\.com\/.*$/
 
@@ -33,7 +47,7 @@ async function isTikTokURL(url){
 }
 
 bot.on("message", async (ctx) => {
-    text = ctx.message.text;
+    text = ctx.message.text ? ctx.message.text : "bilinməyən bir yazı formatı" ;
     const chatID = ctx.message.chat.id;
     const username = ctx.message.from.username ? ctx.message.from.username : "username tapılmadı" ;
     const name = ctx.from.first_name;
