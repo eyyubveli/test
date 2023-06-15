@@ -6,7 +6,6 @@ const keyboard = new InlineKeyboard().text('MP3', 'mp3').row().text('MP4', 'mp4'
 const admin = require("firebase-admin");
 require("dotenv").config();
 
-let text;
 
 const serviceAccount = require("./config.json")
 
@@ -18,6 +17,7 @@ const firestore = admin.firestore();
 
 const bot = new Bot(process.env.BOT_TOKEN);
 
+let text;
 
 bot.command('start',  (ctx) => {
     const name = ctx.from.first_name;
