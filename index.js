@@ -8,13 +8,13 @@ require("dotenv").config();
 const admin = require("firebase-admin");
 const serviceAccount = require("./config.json")
 
-const firestore = admin.firestore();    
 
 
 admin.initializeApp({
     credential : admin.credential.cert(serviceAccount)
 });
 
+const firestore = admin.firestore();    
 
 const bot = new Bot(process.env.BOT_TOKEN);
 
@@ -40,7 +40,7 @@ bot.on("message", async (ctx) => {
    
     const checkUrl = await isTikTokURL(text);
 
-    const userRef =  firestore.collection('users').doc();
+    const userRef = firestore.collection('users').doc();
     const timeStamp = admin.firestore.FieldValue.serverTimestamp();
 
     const userData = {
@@ -60,10 +60,6 @@ bot.on("message", async (ctx) => {
     await ctx.reply('Format seçin', {
         reply_markup: keyboard,
     });
-
-
-   
-
 
 });
 
