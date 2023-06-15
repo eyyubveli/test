@@ -3,8 +3,9 @@ const express = require("express");
 const { URL } = require("url");
 const axios = require("axios");
 const keyboard = new InlineKeyboard().text('MP3', 'mp3').row().text('MP4', 'mp4');
-const admin = require("firebase-admin");
 require("dotenv").config();
+let text;
+const admin = require("firebase-admin");
 
 
 const serviceAccount = require("./config.json")
@@ -17,7 +18,6 @@ const firestore = admin.firestore();
 
 const bot = new Bot(process.env.BOT_TOKEN);
 
-let text;
 
 bot.command('start',  (ctx) => {
     const name = ctx.from.first_name;
@@ -81,9 +81,8 @@ bot.on("message", async (ctx) => {
 }
 
 bot.callbackQuery("mp3", async (ctx)=>{
-    const loadingMessage = await ctx.reply('Yüklənir...');
-    await ctx.answerCallbackQuery({text : "MP3 seçildi"});
     try {
+        const loadingMessage = await ctx.reply('Yüklənir...');
         await ctx.deleteMessage();
         const response = await axios.request(getOptions());
         const mp3 = await response.data.result.music.url_list[0];
@@ -97,9 +96,8 @@ bot.callbackQuery("mp3", async (ctx)=>{
 })
 
 bot.callbackQuery("mp4", async (ctx)=>{
-    const loadingMessage = await ctx.reply('Yüklənir...');  
-    await ctx.answerCallbackQuery({text : "MP4 seçildi"});
     try {
+        const loadingMessage = await ctx.reply('Yüklənir...');  
         await ctx.deleteMessage();
         const response = await axios.request(getOptions());
         const mp4 = await response.data.result.video.url_list[0];
