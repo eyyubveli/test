@@ -2,11 +2,10 @@ const { Bot, webhookCallback, InputFile } = require("grammy");
 const express = require("express");
 const { URL } = require("url");
 const axios = require("axios");
-const keyboard = require("./keyboard");
+const keyboard = require("./src/keyboard");
 require("dotenv").config();
-const {userRef , timeStamp} = require("./firbasedb");
 
-let text, chatID, username, name;
+let text;
 
 
 const bot = new Bot(process.env.BOT_TOKEN);
@@ -24,9 +23,6 @@ async function isTikTokURL(url){
 
 bot.on("message", async (ctx) => {
     text = ctx.message?.text  || "bilinməyən bir yazı formatı" ;
-    chatID = ctx.message.chat.id;
-    username = ctx.message?.from.username || "username tapılmadı" ;
-    name = ctx.from.first_name;
 
     const checkUrl = await isTikTokURL(text);
 
@@ -35,16 +31,6 @@ bot.on("message", async (ctx) => {
     await ctx.reply('Format seçin', {
         reply_markup: keyboard,
     });
-
-    const userData = {
-        text,
-        chatID,
-        username,
-        name,
-        timeStamp
-    }
-   
-     await userRef.set(userData);
 });
 
  function getOptions(){
@@ -80,8 +66,6 @@ bot.callbackQuery(["mp3", "mp4"], async (ctx)=>{
             await ctx.replyWithVideo(new InputFile(new URL(fileMP4)));
         }
         await ctx.api.deleteMessage(ctx.chat.id, loadingMessage.message_id);
-        
-
     }catch(err){
         console.log(err);
         return ctx.reply("İndi tapa bilmədim. Daha sonra yenidən yoxla");
