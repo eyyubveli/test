@@ -4,18 +4,17 @@ const { URL } = require("url");
 const axios = require("axios");
 const keyboard = new InlineKeyboard().text('MP3', 'mp3').row().text('MP4', 'mp4');
 require("dotenv").config();
+const admin = require("firebase-admin");
+const serviceAccount = require("./config.json")
 
- const admin = require("firebase-admin");
- const serviceAccount = require("./config.json")
+let text;
 
 admin.initializeApp({
     credential : admin.credential.cert(serviceAccount)
 });
- const firestore = admin.firestore();    
 
+const firestore = admin.firestore();    
 const bot = new Bot(process.env.BOT_TOKEN);
-
-let text = "";
 
 bot.command('start',  (ctx) => {
     const name = ctx.from.first_name;
@@ -37,6 +36,10 @@ bot.on("message", async (ctx) => {
     const checkUrl = await isTikTokURL(text);
  
     if(!checkUrl) return ctx.reply(`Doğru bir url daxil et`);
+
+    await ctx.reply('Format seçin', {
+        reply_markup: keyboard,
+    });
     
     const userRef = firestore.collection('users').doc();
     const timeStamp = admin.firestore.FieldValue.serverTimestamp();
@@ -50,11 +53,6 @@ bot.on("message", async (ctx) => {
     }
 
     await userRef.set(userData);
-
-    await ctx.reply('Format seçin', {
-        reply_markup: keyboard,
-    });
-
 });
 
  function getOptions(){
