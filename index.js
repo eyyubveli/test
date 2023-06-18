@@ -1,4 +1,4 @@
-const { Bot, webhookCallback, InputFile } = require("grammy");
+tconst { Bot, webhookCallback, InputFile } = require("grammy");
 const express = require("express");
 const { URL } = require("url");
 const axios = require("axios");
@@ -10,19 +10,29 @@ let text;
 
 const bot = new Bot(process.env.BOT_TOKEN);
 
+async function isUser(userId){
+  const newUserRef = userRef.doc(userId);
+  const doc = await newUserRef.get();
+  return doc.exits;
+}
+
 bot.command('start',  async (ctx) => {
     const name = ctx.from.first_name;
     const chatID = ctx.chat.id;
     const username = ctx.from?.username || "username qeyd edilməyib";
-
+    const userId = ctx.message.from.id.toString();
+    const checkUser = await isUser(userId);
+    
     try {
-        const setUserRef = userRef.doc(ctx.message.from.id.toString())
-        const userDoc = await setUserRef.get();
-
-        if(!userDoc.exits){
-            await setUserRef.set({name, chatID, username, timeStamp});
+        if(!checkUser){
+            const userData = {
+                name,
+                chatId,
+                username,
+            }
+          await userRef.doc(userId).set(userData)
         }
-
+        
         return ctx.reply(`Xoş gəldin ${name}. Url daxil et!`);
       } catch (error) {
         return ctx.reply('Daha sonra yeniden yoxlayin');
