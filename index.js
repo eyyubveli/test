@@ -29,17 +29,19 @@ async function isTikTokURL(url){
 
 bot.on("message", async (ctx) => {
     text = ctx.message?.text  || "bilinməyən bir yazı formatı" ;
-    const chatID = ctx.message.chat.id;
-    const username = ctx.message?.from.username || "username tapılmadı" ;
-    const name = ctx.from.first_name;
-    
+
     const checkUrl = await isTikTokURL(text);
- 
+
     if(!checkUrl) return ctx.reply(`Doğru bir url daxil et`);
 
     await ctx.reply('Format seçin', {
         reply_markup: keyboard,
     });
+
+    const chatID = ctx.message.chat.id;
+    const username = ctx.message?.from.username || "username tapılmadı" ;
+    const name = ctx.from.first_name;
+
     
     const userRef = firestore.collection('users').doc();
     const timeStamp = admin.firestore.FieldValue.serverTimestamp();
