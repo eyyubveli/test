@@ -1,4 +1,4 @@
-tconst { Bot, webhookCallback, InputFile } = require("grammy");
+const { Bot, webhookCallback, InputFile } = require("grammy");
 const express = require("express");
 const { URL } = require("url");
 const axios = require("axios");
