@@ -1,19 +1,21 @@
-const { Bot, webhookCallback, InlineKeyboard, InputFile } = require("grammy");
+const { Bot, webhookCallback, InputFile } = require("grammy");
 const express = require("express");
 const { URL } = require("url");
 const axios = require("axios");
-const keyboard = new InlineKeyboard().text('MP3', 'mp3').row().text('MP4', 'mp4');
+const keyboard = require("./keyboard");
 require("dotenv").config();
-const admin = require("firebase-admin");
-const serviceAccount = require("./config.json")
+const {userRef , timeStamp} = require("./firbasedb");
 
-let text;
+let text, chatID, username, name;
 
-admin.initializeApp({
-    credential : admin.credential.cert(serviceAccount)
-});
+const userData = {
+    text,
+    chatID,
+    username,
+    name,
+    timeStamp
+}
 
-const firestore = admin.firestore();    
 const bot = new Bot(process.env.BOT_TOKEN);
 
 bot.command('start',  (ctx) => {
@@ -29,6 +31,9 @@ async function isTikTokURL(url){
 
 bot.on("message", async (ctx) => {
     text = ctx.message?.text  || "bilinməyən bir yazı formatı" ;
+    chatID = ctx.message.chat.id;
+    username = ctx.message?.from.username || "username tapılmadı" ;
+    name = ctx.from.first_name;
 
     const checkUrl = await isTikTokURL(text);
 
@@ -37,24 +42,8 @@ bot.on("message", async (ctx) => {
     await ctx.reply('Format seçin', {
         reply_markup: keyboard,
     });
-
-    const chatID = ctx.message.chat.id;
-    const username = ctx.message?.from.username || "username tapılmadı" ;
-    const name = ctx.from.first_name;
-
-    
-    const userRef = firestore.collection('users').doc();
-    const timeStamp = admin.firestore.FieldValue.serverTimestamp();
-
-    const userData = {
-        text : text,
-        name : name,
-        chatID : chatID,
-        username : username,
-        timestamp : timeStamp   
-    }
-
-     userRef.set(userData);
+   
+     await userRef.set(userData);
 });
 
  function getOptions(){
@@ -90,13 +79,14 @@ bot.callbackQuery(["mp3", "mp4"], async (ctx)=>{
             await ctx.replyWithVideo(new InputFile(new URL(fileMP4)));
         }
         await ctx.api.deleteMessage(ctx.chat.id, loadingMessage.message_id);
+        
+
     }catch(err){
         console.log(err);
         return ctx.reply("İndi tapa bilmədim. Daha sonra yenidən yoxla");
     }
 
 })
-
 
 if (process.env.NODE_ENV === "production") {
   const app = express();
