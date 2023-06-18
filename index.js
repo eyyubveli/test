@@ -18,7 +18,7 @@ async function isUser(userId){
 
 bot.command('start',  async (ctx) => {
     const name = ctx.from.first_name;
-    const chatID = ctx.chat.id;
+    const chatID = ctx.message.chat.id;
     const username = ctx.from?.username || "username qeyd edilməyib";
     const userId = ctx.message.from.id.toString();
     const checkUser = await isUser(userId);
