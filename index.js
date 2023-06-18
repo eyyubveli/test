@@ -52,7 +52,7 @@ bot.on("message", async (ctx) => {
         timestamp : timeStamp   
     }
 
-    await userRef.set(userData);
+     userRef.set(userData);
 });
 
  function getOptions(){
