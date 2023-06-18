@@ -8,13 +8,6 @@ const {userRef , timeStamp} = require("./firbasedb");
 
 let text, chatID, username, name;
 
-const userData = {
-    text,
-    chatID,
-    username,
-    name,
-    timeStamp
-}
 
 const bot = new Bot(process.env.BOT_TOKEN);
 
@@ -42,6 +35,14 @@ bot.on("message", async (ctx) => {
     await ctx.reply('Format seçin', {
         reply_markup: keyboard,
     });
+
+    const userData = {
+        text,
+        chatID,
+        username,
+        name,
+        timeStamp
+    }
    
      await userRef.set(userData);
 });
