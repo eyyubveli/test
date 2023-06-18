@@ -13,7 +13,7 @@ const bot = new Bot(process.env.BOT_TOKEN);
 async function isUser(userId){
   const newUserRef = userRef.doc(userId);
   const doc = await newUserRef.get();
-  return doc.exits;
+  return doc.exists;
 }
 
 bot.command('start',  async (ctx) => {
