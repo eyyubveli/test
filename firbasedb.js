@@ -9,4 +9,4 @@ const firestore = admin.firestore();
 const userRef = firestore.collection('users').doc();
 const timeStamp = admin.firestore.FieldValue.serverTimestamp();
 
-export {userRef , timeStamp}
+module.exports = {userRef, timeStamp}
