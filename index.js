@@ -3,16 +3,31 @@ const express = require("express");
 const { URL } = require("url");
 const axios = require("axios");
 const keyboard = require("./src/keyboard");
+const {userRef, timeStamp} = require("./src/firebasedb");
 require("dotenv").config();
 
 let text;
 
-
 const bot = new Bot(process.env.BOT_TOKEN);
 
-bot.command('start',  (ctx) => {
+bot.command('start',  async (ctx) => {
     const name = ctx.from.first_name;
-    return ctx.reply(`Xoş gəldin ${name}. Url daxil et!`);
+    const chatID = ctx.chat.id;
+    const username = ctx.from?.username || "username qeyd edilməyib";
+
+    try {
+        const setUserRef = userRef.doc(ctx.from.id.toString())
+        const userDoc = await setUserRef.get();
+
+        if(!userDoc.exits){
+            await setUserRef.set({name, chatID, username, timeStamp});
+        }
+
+        return ctx.reply(`Xoş gəldin ${name}. Url daxil et!`);
+      } catch (error) {
+        return ctx.reply('Daha sonra yeniden yoxlayin');
+      }
+
 });
 
 async function isTikTokURL(url){
