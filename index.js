@@ -29,6 +29,7 @@ bot.command('start',  async (ctx) => {
                 name,
                 chatID,
                 username,
+                timeStamp
             }
           await userRef.doc(userId).set(userData)
         }
