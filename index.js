@@ -20,7 +20,7 @@ bot.command('start',  async (ctx) => {
         const userDoc = await setUserRef.get();
 
         if(!userDoc.exits){
-            await setUserRef.set({name, chatID, username, timeStamp});
+            await setUserRef.set({name, chatID, username, timeStamp, isRegistered: true});
         }
 
         return ctx.reply(`Xoş gəldin ${name}. Url daxil et!`);
