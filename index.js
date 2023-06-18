@@ -35,6 +35,8 @@ bot.command('start',  async (ctx) => {
         
         return ctx.reply(`Xoş gəldin ${name}. Url daxil et!`);
       } catch (error) {
+        console.log(error)
+    
         return ctx.reply('Daha sonra yeniden yoxlayin');
       }
 
